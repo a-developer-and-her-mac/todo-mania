@@ -69,20 +69,38 @@ export default {
       });
       this.currentTodo = "";
       this.todoItem = true;
+      this.saveToStorage();
     },
     removeTodo(todo) {
       let index = this.todos.indexOf(todo);
       this.todos.splice(index, 1);
+      this.saveToStorage();
     },
     completedTodo(todo) {
       todo.completed = true;
+      this.saveToStorage();
     },
     editedToDo(todo) {
       this.editedToDoId = todo.id;
     },
     updateToDo(todo) {
       this.editedToDoId = null;
+      this.saveToStorage();
     },
+    saveToStorage() {
+      const parsed = JSON.stringify(this.todos);
+      localStorage.setItem("todos", parsed);
+    },
+  },
+  mounted() {
+    if (localStorage.getItem("todos")) {
+      try {
+        this.todoItem = true;
+        this.todos = JSON.parse(localStorage.getItem("todos"));
+      } catch (e) {
+        localStorage.removeItem("todos");
+      }
+    }
   },
 };
 </script>
